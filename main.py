@@ -1,21 +1,6 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+def main():
+    print("Hello from wheen!")
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-
-app = FastAPI()
-
-
-@app.post("/items/")
-async def create_item(item: Item):
-    item_dict=item.dict()
-    if item.tax is not None:
-        price_with_tax = item.name + item.price
-        item_dict.update({"price_with_tax": price_with_tax})
-    return item
+if __name__ == "__main__":
+    main()
