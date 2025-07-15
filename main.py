@@ -1,9 +1,14 @@
-from typing import Union
+from typing import Set, Union
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 app = FastAPI()
+
+
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
 
 
 class Item(BaseModel):
@@ -11,14 +16,11 @@ class Item(BaseModel):
     description: Union[str, None] = None
     price: float
     tax: Union[float, None] = None
-
-
-class User(BaseModel):
-    username: str
-    full_name: Union[str, None] = None
+    tags: Set[str] = set()
+    image: Union[Image, None] = None
 
 
 @app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item, user: User):
-    results = {"item_id": item_id, "item": item, "user": user}
+async def update_item(item_id: int, item: Item):
+    results = {"item_id": item_id, "item": item}
     return results
