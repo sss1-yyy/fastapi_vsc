@@ -1,10 +1,12 @@
-from typing import Annotated
+from typing import Union
 
-from fastapi import Cookie, FastAPI
+from fastapi import FastAPI, Header
 
 app = FastAPI()
 
 
 @app.get("/items/")
-async def read_items(ads_id: Annotated[str | None, Cookie()] = None):
-    return {"ads_id": ads_id}
+async def read_items(
+    strange_header: Union[str, None] = Header(default=None, convert_underscores=False),
+):
+    return {"strange_header": strange_header}
