@@ -1,14 +1,16 @@
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
+items = {"foo": "The Foo Wrestlers"}
 
-@app.post("/files/")
-async def create_file(
-    file: bytes = File(), fileb: UploadFile = File(), token: str = Form()
-):
-    return {
-        "file_size": len(file),
-        "token": token,
-        "fileb_content_type": fileb.content_type,
-    }
+
+@app.get("/items-header/{item_id}")
+async def read_item_header(item_id: str):
+    if item_id not in items:
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found",
+            headers={"X-Error": "There goes my error"},
+        )
+    return {"item": items[item_id]}
